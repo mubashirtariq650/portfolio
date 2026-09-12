@@ -5,62 +5,49 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   // ------------------------------------------------------------------------
-  // 1. Mobile Menu Drawer Controller
+  // 1. Fullscreen Mobile Menu Controller
   // ------------------------------------------------------------------------
   const navToggle = document.querySelector('.nav-toggle');
-  const mobileDrawer = document.querySelector('.mobile-nav-drawer');
+  const mobileDrawer = document.getElementById('mobile-nav-drawer');
+  const drawerCloseBtn = document.querySelector('.mobile-drawer-close');
   const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
 
   function openMenu() {
-    if (!navToggle || !mobileDrawer) return;
-    navToggle.setAttribute('aria-expanded', 'true');
+    if (!mobileDrawer) return;
+    navToggle?.setAttribute('aria-expanded', 'true');
     mobileDrawer.classList.add('is-open');
     document.body.classList.add('menu-open');
   }
 
   function closeMenu() {
-    if (!navToggle || !mobileDrawer) return;
-    navToggle.setAttribute('aria-expanded', 'false');
+    if (!mobileDrawer) return;
+    navToggle?.setAttribute('aria-expanded', 'false');
     mobileDrawer.classList.remove('is-open');
     document.body.classList.remove('menu-open');
   }
 
-  function toggleMenu() {
-    const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
-    if (isExpanded) {
-      closeMenu();
-    } else {
-      openMenu();
-    }
-  }
-
   if (navToggle) {
-    navToggle.addEventListener('click', toggleMenu);
+    navToggle.addEventListener('click', openMenu);
   }
 
-  // Close menu when clicking on any mobile nav link
+  if (drawerCloseBtn) {
+    drawerCloseBtn.addEventListener('click', closeMenu);
+  }
+
+  // Close menu when clicking on any navigation link
   mobileNavLinks.forEach((link) => {
     link.addEventListener('click', () => {
       closeMenu();
     });
   });
 
-  // Close menu on pressing Escape
+  // Close menu on pressing Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && mobileDrawer && mobileDrawer.classList.contains('is-open')) {
       closeMenu();
       navToggle?.focus();
     }
   });
-
-  // Close menu when clicking outside mobile nav container
-  if (mobileDrawer) {
-    mobileDrawer.addEventListener('click', (e) => {
-      if (e.target === mobileDrawer) {
-        closeMenu();
-      }
-    });
-  }
 
   // ------------------------------------------------------------------------
   // 2. Intersection Observer for Scroll Reveals
@@ -102,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!sectionId) return;
 
       if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-        // Desktop links
         desktopNavLinks.forEach((link) => {
           if (link.getAttribute('href') === `#${sectionId}`) {
             link.classList.add('active');
@@ -111,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
 
-        // Mobile links
         mobileNavLinks.forEach((link) => {
           if (link.getAttribute('href') === `#${sectionId}`) {
             link.classList.add('active');

@@ -35,9 +35,19 @@
       <span class="nav-toggle-bar" aria-hidden="true"></span>
     </button>
   </div>
+</nav>
 
-  <!-- Mobile Drawer Overlay -->
-  <div id="mobile-nav-drawer" class="mobile-nav-drawer" aria-label="Mobile Navigation Menu">
+<!-- FULLSCREEN SOLID MOBILE DRAWER (MOVED OUTSIDE NAV TO PREVENT ANY SEE-THROUGH OVERLAP) -->
+<div id="mobile-nav-drawer" class="mobile-nav-drawer" aria-label="Mobile Navigation Menu">
+  <div class="mobile-drawer-header">
+    <div class="brand"><span class="dot" aria-hidden="true"></span>mubashir.dev</div>
+    <button type="button" class="mobile-drawer-close" aria-label="Close navigation menu">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+  <div class="mobile-nav-content">
     <div class="mobile-nav-links">
       <a href="#experience">experience</a>
       <a href="#projects">projects</a>
@@ -45,7 +55,7 @@
       <a href="#contact">contact</a>
     </div>
   </div>
-</nav>
+</div>
 
 <!-- HERO SECTION -->
 <header class="hero">
