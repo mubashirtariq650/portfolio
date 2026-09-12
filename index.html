@@ -1,262 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Muhammad Mubashir Tariq — Laravel Developer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg: #080b12;
-    --bg-raised: #10151f;
-    --bg-raised-2: #141b28;
-    --bg-inset: #05070c;
-    --line: #212b3d;
-    --line-soft: #161e2b;
-    --text: #e4eaf2;
-    --text-dim: #8593a8;
-    --text-faint: #4c5568;
-    --teal: #5eead4;
-    --teal-dim: #2d7d70;
-    --violet: #b39bfb;
-    --amber: #f0b866;
-    --red: #ff6b6b;
-    --mono: 'JetBrains Mono', ui-monospace, monospace;
-    --sans: 'Inter', system-ui, sans-serif;
-  }
-
-  *{ box-sizing: border-box; }
-  html{ scroll-behavior: smooth; }
-  body{
-    margin:0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-  ::selection{ background: var(--teal); color: #06110f; }
-
-  a{ color: inherit; text-decoration: none; }
-  img{ max-width:100%; display:block; }
-
-  @media (prefers-reduced-motion: reduce){
-    html{ scroll-behavior: auto; }
-    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-  }
-
-  /* layered backdrop: soft glow fields + fine circuit grid */
-  .glow-backdrop{
-    position: fixed; inset: 0; z-index: -2;
-    background:
-      radial-gradient(680px 420px at 15% -5%, rgba(94,234,212,0.10), transparent 60%),
-      radial-gradient(620px 480px at 100% 10%, rgba(179,155,251,0.09), transparent 60%),
-      var(--bg);
-  }
-  .grid-backdrop{
-    position: fixed; inset: 0; z-index: -1;
-    background-image:
-      linear-gradient(var(--line-soft) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse 65% 55% at 50% 0%, black 35%, transparent 88%);
-    opacity: 0.45;
-  }
-
-  .reveal{ opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .reveal.in{ opacity: 1; transform: translateY(0); }
-
-  .wrap{ max-width: 920px; margin: 0 auto; padding: 0 24px; }
-
-  /* ---------- NAV ---------- */
-  nav{
-    position: sticky; top:0; z-index: 50;
-    background: rgba(10,14,22,0.85);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--line);
-  }
-  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height: 64px; }
-  .brand{ font-family: var(--mono); font-weight:700; font-size: 0.95rem; color: var(--text); display:flex; align-items:center; gap:8px;}
-  .brand .dot{ width:8px; height:8px; border-radius:50%; background: var(--teal); box-shadow: 0 0 10px var(--teal); }
-  .navlinks{ display:flex; gap: 28px; font-family: var(--mono); font-size: 0.85rem; color: var(--text-dim); }
-  .navlinks a:hover{ color: var(--teal); }
-  @media (max-width: 640px){ .navlinks{ gap:16px; font-size: 0.75rem; } }
-
-  /* ---------- HERO ---------- */
-  header.hero{ padding: 76px 0 60px; }
-
-  .status-badge{
-    display:inline-flex; align-items:center; gap:8px;
-    font-family: var(--mono); font-size: 0.78rem; color: var(--text-dim);
-    border: 1px solid var(--line); background: var(--bg-raised);
-    padding: 6px 14px; border-radius: 100px; margin-bottom: 28px;
-  }
-  .status-badge .pulse{
-    width:7px; height:7px; border-radius:50%; background: var(--teal); position:relative; flex-shrink:0;
-  }
-  .status-badge .pulse::before{
-    content:""; position:absolute; inset:-4px; border-radius:50%;
-    border: 1px solid var(--teal); animation: pulse-ring 2.2s ease-out infinite;
-  }
-  @keyframes pulse-ring{ 0%{ transform:scale(0.6); opacity:0.9; } 100%{ transform:scale(2.2); opacity:0; } }
-
-  .terminal{
-    background: var(--bg-inset);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 40px 90px -35px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.02) inset;
-  }
-  .terminal-bar{
-    display:flex; align-items:center; gap:8px;
-    padding: 10px 14px;
-    background: var(--bg-raised);
-    border-bottom: 1px solid var(--line);
-  }
-  .terminal-bar span{ width:11px; height:11px; border-radius:50%; display:inline-block; }
-  .terminal-bar span:nth-child(1){ background:#ff5f57; }
-  .terminal-bar span:nth-child(2){ background:#febc2e; }
-  .terminal-bar span:nth-child(3){ background:#28c840; }
-  .terminal-title{ margin-left: 8px; font-family: var(--mono); font-size: 0.75rem; color: var(--text-faint); }
-  .terminal-body{ padding: 28px 28px 32px; font-family: var(--mono); font-size: 0.95rem; }
-  .terminal-body .comment{ color: var(--text-faint); }
-  .terminal-body .kw{ color: var(--violet); }
-  .terminal-body .fn{ color: var(--teal); }
-  .terminal-body .str{ color: var(--amber); }
-  .terminal-body .prop{ color: #7dd3fc; }
-  .cursor{ display:inline-block; width:9px; height:1.1em; background: var(--teal); vertical-align: text-bottom; animation: blink 1s steps(1) infinite; }
-  @keyframes blink{ 50%{ opacity:0; } }
-
-  .hero-name{
-    font-family: var(--sans);
-    font-size: clamp(2.4rem, 5.4vw, 3.6rem);
-    font-weight: 700;
-    margin: 36px 0 8px;
-    letter-spacing: -0.03em;
-    line-height: 1.08;
-  }
-  .hero-role{
-    display:inline-flex; align-items:center; gap:10px;
-    color: var(--teal); font-family: var(--mono); font-size: 1.05rem; margin-bottom: 24px;
-  }
-  .hero-role::before{ content:""; width:22px; height:1px; background: var(--teal-dim); display:inline-block; }
-  .hero-summary{ color: var(--text-dim); max-width: 60ch; font-size: 1.06rem; }
-
-  .hero-meta{ display:flex; flex-wrap:wrap; gap: 12px 14px; margin-top: 32px; font-size: 0.86rem; color: var(--text-dim); }
-  .hero-meta .item{
-    display:flex; align-items:center; gap:8px;
-    border: 1px solid var(--line); background: var(--bg-raised);
-    padding: 8px 14px; border-radius: 8px;
-    transition: border-color 0.15s, color 0.15s, transform 0.15s;
-  }
-  a.item:hover{ color: var(--teal); border-color: var(--teal-dim); transform: translateY(-1px); }
-  .hero-meta svg{ width:14px; height:14px; opacity:0.75; flex-shrink:0; }
-
-  /* ---------- SECTION SHELLS ---------- */
-  section{ padding: 70px 0; border-top: 1px solid var(--line-soft); }
-  .section-head{ display:flex; align-items:baseline; gap: 14px; margin-bottom: 38px; }
-  .section-tag{
-    font-family: var(--mono); color: var(--teal-dim); font-size: 0.8rem;
-    border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px;
-  }
-  .section-title{ font-family: var(--sans); font-size: 1.55rem; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
-
-  /* ---------- SKILLS ---------- */
-  .skill-tree{ font-family: var(--mono); font-size: 0.92rem; }
-  .skill-group{ margin-bottom: 22px; }
-  .skill-group-name{ color: var(--violet); margin-bottom: 10px; font-weight: 600; }
-  .skill-group-name::before{ content: "▸ "; color: var(--text-faint); }
-  .skill-pills{ display:flex; flex-wrap:wrap; gap: 8px; padding-left: 18px; }
-  .pill{
-    border: 1px solid var(--line);
-    background: var(--bg-raised);
-    color: var(--text-dim);
-    padding: 5px 12px;
-    border-radius: 5px;
-    font-size: 0.82rem;
-    transition: border-color 0.15s, color 0.15s;
-  }
-  .pill:hover{ border-color: var(--teal); color: var(--teal); }
-
-  /* ---------- EXPERIENCE TIMELINE ---------- */
-  .timeline{ position: relative; padding-left: 28px; }
-  .timeline::before{ content:""; position:absolute; left:5px; top:6px; bottom:6px; width:1px; background: var(--line); }
-  .tl-item{ position: relative; padding-bottom: 40px; }
-  .tl-item:last-child{ padding-bottom: 0; }
-  .tl-dot{ position:absolute; left:-28px; top:5px; width:11px; height:11px; border-radius:50%; background: var(--bg); border:2px solid var(--teal); box-shadow: 0 0 0 4px var(--bg); }
-  .tl-item.internship .tl-dot{ border-color: var(--text-faint); }
-  .tl-role{ font-weight:700; font-size: 1.05rem; color: var(--text); }
-  .tl-org{ color: var(--teal); font-family: var(--mono); font-size: 0.88rem; }
-  .tl-item.internship .tl-org{ color: var(--text-dim); }
-  .tl-date{ color: var(--text-faint); font-family: var(--mono); font-size: 0.8rem; margin: 3px 0 12px; }
-  .tl-list{ margin:0; padding-left: 20px; color: var(--text-dim); font-size: 0.94rem; }
-  .tl-list li{ margin-bottom: 7px; }
-  .tl-list li::marker{ color: var(--text-faint); }
-
-  /* ---------- PROJECTS ---------- */
-  .projects{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  @media (max-width: 700px){ .projects{ grid-template-columns: 1fr; } }
-  .proj-card{
-    position: relative;
-    background: linear-gradient(180deg, var(--bg-raised-2), var(--bg-raised));
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 24px;
-    display:flex; flex-direction:column; gap:12px;
-    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-  }
-  .proj-card:hover{
-    border-color: var(--teal-dim);
-    transform: translateY(-3px);
-    box-shadow: 0 20px 40px -20px rgba(94,234,212,0.15);
-  }
-  .proj-name{ font-weight:700; font-size:1.02rem; }
-  .proj-stack{ font-family: var(--mono); font-size: 0.75rem; color: var(--amber); }
-  .proj-desc{ color: var(--text-dim); font-size: 0.9rem; flex-grow:1; }
-  .proj-link{ font-family: var(--mono); font-size: 0.8rem; color: var(--teal); display:flex; align-items:center; gap:6px; }
-  .proj-link:hover{ text-decoration: underline; }
-
-  /* ---------- EDUCATION ---------- */
-  .edu-card{
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 22px 24px;
-    background: var(--bg-raised);
-    display:flex; justify-content:space-between; align-items:center; gap: 20px; flex-wrap: wrap;
-  }
-  .edu-degree{ font-weight:700; }
-  .edu-school{ color: var(--text-dim); font-size:0.92rem; margin-top:4px;}
-  .edu-status{ font-family: var(--mono); font-size:0.78rem; color: var(--amber); border:1px solid var(--amber); padding:4px 10px; border-radius: 5px; white-space:nowrap; }
-
-  /* ---------- CONTACT / FOOTER ---------- */
-  footer{ padding: 70px 0 50px; text-align:center; border-top: 1px solid var(--line-soft); }
-  .contact-title{ font-family: var(--mono); font-size: 1.8rem; font-weight: 800; margin-bottom: 14px; }
-  .contact-sub{ color: var(--text-dim); margin-bottom: 30px; }
-  .contact-btn{
-    display:inline-flex; align-items:center; gap:10px;
-    font-family: var(--mono); font-weight:600;
-    background: var(--teal); color: #06110f;
-    padding: 13px 28px; border-radius: 8px;
-    box-shadow: 0 10px 30px -10px rgba(94,234,212,0.5);
-    transition: transform 0.15s;
-  }
-  .contact-btn:hover{ transform: translateY(-2px); }
-  .footer-links{ margin-top: 34px; display:flex; justify-content:center; gap: 26px; font-family: var(--mono); font-size: 0.85rem; color: var(--text-dim); }
-  .footer-links a:hover{ color: var(--teal); }
-  .footer-note{ margin-top: 40px; color: var(--text-faint); font-size: 0.78rem; font-family: var(--mono); }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Portfolio of Muhammad Mubashir Tariq — Junior Laravel Developer specializing in REST APIs, CRUD systems, and database-driven platforms.">
+  <title>Muhammad Mubashir Tariq — Laravel Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="glow-backdrop"></div>
-<div class="grid-backdrop"></div>
+<div class="glow-backdrop" aria-hidden="true"></div>
+<div class="grid-backdrop" aria-hidden="true"></div>
 
-<nav>
+<!-- NAVIGATION -->
+<nav role="navigation" aria-label="Main Navigation">
   <div class="wrap">
-    <div class="brand"><span class="dot"></span>mubashir.dev</div>
+    <a href="#" class="brand" aria-label="Mubashir Tariq Home">
+      <span class="dot" aria-hidden="true"></span>mubashir.dev
+    </a>
+
+    <!-- Desktop Navigation Links -->
     <div class="navlinks">
+      <a href="#experience">experience</a>
+      <a href="#projects">projects</a>
+      <a href="#skills">skills</a>
+      <a href="#contact">contact</a>
+    </div>
+
+    <!-- Mobile Hamburger Toggle -->
+    <button type="button" class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Drawer Overlay -->
+  <div id="mobile-nav-drawer" class="mobile-nav-drawer" aria-label="Mobile Navigation Menu">
+    <div class="mobile-nav-links">
       <a href="#experience">experience</a>
       <a href="#projects">projects</a>
       <a href="#skills">skills</a>
@@ -265,66 +47,91 @@
   </div>
 </nav>
 
+<!-- HERO SECTION -->
 <header class="hero">
   <div class="wrap">
-    <div class="status-badge"><span class="pulse"></span> Available for Laravel &amp; full-stack roles</div>
-    <div class="terminal">
-      <div class="terminal-bar">
-        <span></span><span></span><span></span>
-        <div class="terminal-title">~/portfolio/whoami.php</div>
+    <div class="hero-layout">
+      <!-- Section Content First -->
+      <div class="hero-copy">
+        <div class="status-badge">
+          <span class="pulse" aria-hidden="true"></span>
+          <span>Available for Laravel &amp; full-stack roles</span>
+        </div>
+
+        <div class="terminal" aria-label="Code terminal snippet">
+          <div class="terminal-bar">
+            <div class="terminal-dots" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="terminal-title">~/portfolio/whoami.php</div>
+          </div>
+          <div class="terminal-body">
+            <div class="terminal-code">
+              <div class="comment">// professional summary</div>
+              <div><span class="kw">class</span> <span class="fn">MubashirTariq</span> <span class="kw">extends</span> Developer {</div>
+              <div>&nbsp;&nbsp;<span class="prop">$stack</span> = [<span class="str">'PHP'</span>, <span class="str">'Laravel'</span>, <span class="str">'MySQL'</span>, <span class="str">'Python'</span>];</div>
+              <div>&nbsp;&nbsp;<span class="prop">$focus</span> = <span class="str">'REST APIs, CRMs, SaaS platforms'</span>;</div>
+              <div>}<span class="cursor" aria-hidden="true"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <h1 class="hero-name">Muhammad Mubashir Tariq</h1>
+        <div class="hero-role">Laravel Developer</div>
+        <p class="hero-summary">
+          Laravel developer with nearly a year building REST APIs, CRUD systems, and database-driven
+          platforms — from merchant onboarding CRMs to Shopify integrations. Comfortable across the stack
+          with Python, Flask, Django, and Power BI on the side.
+        </p>
       </div>
-      <div class="terminal-body">
-        <div class="comment">// professional summary</div>
-        <div><span class="kw">class</span> <span class="fn">MubashirTariq</span> <span class="kw">extends</span> Developer {</div>
-        <div>&nbsp;&nbsp;<span class="prop">$stack</span> = [<span class="str">'PHP'</span>, <span class="str">'Laravel'</span>, <span class="str">'MySQL'</span>, <span class="str">'Python'</span>];</div>
-        <div>&nbsp;&nbsp;<span class="prop">$focus</span> = <span class="str">'REST APIs, CRMs, SaaS platforms'</span>;</div>
-        <div>}<span class="cursor"></span></div>
+
+      <!-- Clean Profile Portrait (No wording on or under picture) -->
+      <div class="profile-portrait">
+        <div class="portrait-frame">
+          <div class="portrait-inner">
+            <img src="profile.jpg" alt="Muhammad Mubashir Tariq" width="248" height="310" loading="eager">
+          </div>
+        </div>
       </div>
     </div>
 
-    <h1 class="hero-name">Muhammad Mubashir Tariq</h1>
-    <div class="hero-role">Laravel Developer</div>
-    <p class="hero-summary">
-      Laravel developer with nearly a year building REST APIs, CRUD systems, and database-driven
-      platforms — from merchant onboarding CRMs to Shopify integrations. Comfortable across the stack
-      with Python, Flask, Django, and Power BI on the side.
-    </p>
-
+    <!-- Contact & Social Meta Items -->
     <div class="hero-meta">
       <span class="item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
         Lahore, Punjab, Pakistan
       </span>
       <a class="item" href="mailto:mubashirtariq650@gmail.com">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
         mubashirtariq650@gmail.com
       </a>
-      <span class="item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+      <a class="item item-whatsapp" href="https://wa.me/923188761416?text=Hi%20Mubashir,%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20connect!" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 448 512" fill="currentColor" aria-hidden="true"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
         0318-8761416
-      </span>
+      </a>
       <a class="item" href="https://www.linkedin.com/in/mubashir-tariq-031052366/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6Z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6Z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
         linkedin.com/in/mubashir-tariq
       </a>
       <a class="item" href="https://github.com/mubashirtariq650" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
         github.com/mubashirtariq650
       </a>
     </div>
   </div>
 </header>
 
+<!-- EXPERIENCE SECTION -->
 <section id="experience" class="reveal">
   <div class="wrap">
     <div class="section-head">
       <span class="section-tag">01</span>
-      <span class="section-title">Work Experience</span>
+      <h2 class="section-title">Work Experience</h2>
     </div>
 
     <div class="timeline">
       <div class="tl-item">
-        <div class="tl-dot"></div>
+        <div class="tl-dot" aria-hidden="true"></div>
         <div class="tl-role">Junior Laravel Developer</div>
         <div class="tl-org">Milestone Apps · Full-time · Lahore, Pakistan</div>
         <div class="tl-date">Feb 2026 — Present</div>
@@ -338,7 +145,7 @@
       </div>
 
       <div class="tl-item internship">
-        <div class="tl-dot"></div>
+        <div class="tl-dot" aria-hidden="true"></div>
         <div class="tl-role">Python Developer</div>
         <div class="tl-org">CINQDev · Internship (3 months) · Lahore, Pakistan</div>
         <div class="tl-date">Nov 2025 — Jan 2026</div>
@@ -349,7 +156,7 @@
       </div>
 
       <div class="tl-item internship">
-        <div class="tl-dot"></div>
+        <div class="tl-dot" aria-hidden="true"></div>
         <div class="tl-role">Web Developer</div>
         <div class="tl-org">SSL Solutions · Internship (3 months) · Lahore, Pakistan</div>
         <div class="tl-date">Aug 2025 — Oct 2025</div>
@@ -362,11 +169,12 @@
   </div>
 </section>
 
+<!-- PROJECTS SECTION -->
 <section id="projects" class="reveal">
   <div class="wrap">
     <div class="section-head">
       <span class="section-tag">02</span>
-      <span class="section-title">Key Projects</span>
+      <h2 class="section-title">Key Projects</h2>
     </div>
 
     <div class="projects">
@@ -377,7 +185,10 @@
           Built RESTful APIs syncing merchant onboarding data, application states, and documents in real time.
           Architected an Equipment Management &amp; History module with CRUD, validation, and automated audit logs.
         </div>
-        <a class="proj-link" href="https://staging.universalpayments.ca/" target="_blank" rel="noopener">→ staging.universalpayments.ca</a>
+        <a class="proj-link" href="https://staging.universalpayments.ca/" target="_blank" rel="noopener">
+          <span>staging.universalpayments.ca</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
       </div>
 
       <div class="proj-card">
@@ -387,7 +198,10 @@
           Custom Shopify app connecting multiple stores to one unified dashboard — products auto-fetch and sync
           whenever a store installs the app.
         </div>
-        <a class="proj-link" href="https://github.com/milestoneappshq/damiam-shopify-sync" target="_blank" rel="noopener">→ view on GitHub</a>
+        <a class="proj-link" href="https://github.com/milestoneappshq/damiam-shopify-sync" target="_blank" rel="noopener">
+          <span>view on GitHub</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
       </div>
 
       <div class="proj-card">
@@ -396,7 +210,10 @@
         <div class="proj-desc">
           Built frontend and multiple CRUD modules for a business management dashboard used internally by the client.
         </div>
-        <a class="proj-link" href="https://apps.kohinoormills.com/" target="_blank" rel="noopener">→ apps.kohinoormills.com</a>
+        <a class="proj-link" href="https://apps.kohinoormills.com/" target="_blank" rel="noopener">
+          <span>apps.kohinoormills.com</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
       </div>
 
       <div class="proj-card">
@@ -406,97 +223,108 @@
           Contributed frontend modules and Power BI-based data visualization and reporting dashboards for a
           cybersecurity SaaS platform.
         </div>
-        <a class="proj-link" href="https://secureguard360.integrated-cyber.com/" target="_blank" rel="noopener">→ secureguard360.integrated-cyber.com</a>
+        <a class="proj-link" href="https://secureguard360.integrated-cyber.com/" target="_blank" rel="noopener">
+          <span>secureguard360.integrated-cyber.com</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
       </div>
     </div>
   </div>
 </section>
 
+<!-- CORE SKILLS SECTION -->
 <section id="skills" class="reveal">
   <div class="wrap">
     <div class="section-head">
       <span class="section-tag">03</span>
-      <span class="section-title">Core Skills</span>
+      <h2 class="section-title">Core Skills</h2>
     </div>
 
     <div class="skill-tree">
       <div class="skill-group">
         <div class="skill-group-name">languages_and_frameworks</div>
         <div class="skill-pills">
-          <span class="pill">PHP</span><span class="pill">Laravel</span><span class="pill">Python</span>
-          <span class="pill">Flask</span><span class="pill">FastAPI</span><span class="pill">Django</span>
-          <span class="pill">JavaScript</span><span class="pill">Bootstrap</span>
+          <span class="pill">PHP</span>
+          <span class="pill">Laravel</span>
+          <span class="pill">Python</span>
+          <span class="pill">Flask</span>
+          <span class="pill">FastAPI</span>
+          <span class="pill">Django</span>
+          <span class="pill">JavaScript</span>
+          <span class="pill">Bootstrap</span>
         </div>
       </div>
       <div class="skill-group">
         <div class="skill-group-name">api_and_backend</div>
         <div class="skill-pills">
-          <span class="pill">REST APIs</span><span class="pill">CRUD Development</span><span class="pill">Authentication</span>
-          <span class="pill">RBAC</span><span class="pill">MVC Architecture</span><span class="pill">Webhooks</span><span class="pill">OAuth</span>
+          <span class="pill">REST APIs</span>
+          <span class="pill">CRUD Development</span>
+          <span class="pill">Authentication</span>
+          <span class="pill">RBAC</span>
+          <span class="pill">MVC Architecture</span>
+          <span class="pill">Webhooks</span>
+          <span class="pill">OAuth</span>
         </div>
       </div>
       <div class="skill-group">
         <div class="skill-group-name">database</div>
         <div class="skill-pills">
-          <span class="pill">MySQL</span><span class="pill">Database Migrations</span><span class="pill">Query Optimization</span>
+          <span class="pill">MySQL</span>
+          <span class="pill">Database Migrations</span>
+          <span class="pill">Query Optimization</span>
         </div>
       </div>
       <div class="skill-group">
         <div class="skill-group-name">tools</div>
         <div class="skill-pills">
-          <span class="pill">Git</span><span class="pill">GitHub</span><span class="pill">Postman</span>
-          <span class="pill">Shopify APIs</span><span class="pill">Stripe</span><span class="pill">Power BI</span><span class="pill">Excel Import/Export</span>
+          <span class="pill">Git</span>
+          <span class="pill">GitHub</span>
+          <span class="pill">Postman</span>
+          <span class="pill">Shopify APIs</span>
+          <span class="pill">Stripe</span>
+          <span class="pill">Power BI</span>
+          <span class="pill">Excel Import/Export</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- <section id="education" class="reveal">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="section-tag">04</span>
-      <span class="section-title">Education</span>
-    </div>
-    <div class="edu-card">
-      <div>
-        <div class="edu-degree">Bachelor of Science in Computer Science (BSCS)</div>
-        <div class="edu-school">Virtual University of Pakistan</div>
-      </div>
-      <div class="edu-status">in progress — 3rd semester</div>
-    </div>
-  </div>
-</section> -->
-
+<!-- CONTACT & FOOTER -->
 <footer id="contact">
-  <div class="wrap">
-    <div class="contact-title">Let's build something.</div>
+  <div class="footer-wrap">
+    <h2 class="contact-title">Let's build something.</h2>
     <p class="contact-sub">Open to Laravel and full-stack backend roles.</p>
-    <a class="contact-btn" href="mailto:mubashirtariq650@gmail.com">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
-      mubashirtariq650@gmail.com
-    </a>
+    
+    <div class="contact-cta-group">
+      <a class="contact-btn" href="mailto:mubashirtariq650@gmail.com">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+        <span>mubashirtariq650@gmail.com</span>
+      </a>
+    </div>
+
     <div class="footer-links">
       <a href="https://www.linkedin.com/in/mubashir-tariq-031052366/" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://github.com/mubashirtariq650" target="_blank" rel="noopener">GitHub</a>
       <a href="tel:03188761416">0318-8761416</a>
     </div>
+
     <div class="footer-note">© 2026 Muhammad Mubashir Tariq</div>
   </div>
 </footer>
 
-<script>
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        entry.target.classList.add('in');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  revealEls.forEach(el => io.observe(el));
-</script>
+<!-- OFFICIAL CRISP WHATSAPP FLOATING BUTTON -->
+<a href="https://wa.me/923188761416?text=Hi%20Mubashir,%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20connect!" 
+   class="whatsapp-float" 
+   target="_blank" 
+   rel="noopener noreferrer" 
+   aria-label="Chat directly on WhatsApp (0318-8761416)">
+  <svg class="whatsapp-float-icon" viewBox="0 0 448 512" aria-hidden="true">
+    <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+  </svg>
+</a>
+
+<script src="js/main.js" defer></script>
 
 </body>
 </html>
